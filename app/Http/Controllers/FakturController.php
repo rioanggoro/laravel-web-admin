@@ -27,7 +27,6 @@ class FakturController extends Controller
     public function create()
     {
         $barangs = Barang::all();
-        dd($barangs); // Debugging
         return view('faktur.create', compact('barangs'));
     }
 
@@ -64,14 +63,20 @@ class FakturController extends Controller
         }
     }
 
-
     // Menampilkan form edit faktur
     public function edit($id)
     {
-        $faktur = Faktur::findOrFail($id);
-        $barangs = Barang::all();
-        return view('faktur.edit', compact('faktur', 'barangs'));
+        $faktur = Faktur::with('barang')->findOrFail($id); // Pastikan barang di-load bersama faktur
+
+        return response()->json([
+            'nomor_faktur' => $faktur->nomor_faktur,
+            'kode_faktur' => $faktur->kode_faktur,
+            'nama_barang' => $faktur->barang->id, // atau $faktur->nama_barang jika kolom id barang ada di tabel faktur
+            'banyak' => $faktur->banyak,
+            'harga_satuan' => $faktur->harga_satuan,
+        ]);
     }
+
 
     // Mengupdate data faktur
     public function update(Request $request, $id)
@@ -85,7 +90,24 @@ class FakturController extends Controller
         ]);
 
         try {
+            $faktur = Faktur::findOrFail($id);
+            $barang = Barang::findOrFail($request->nama_barang);
+
+            // Periksa apakah jumlah faktur berubah dan sesuaikan stok
+            $stokLama = $faktur->banyak;
+            $stokBaru = $request->banyak;
+
+            if ($stokBaru > $stokLama && $barang->stok < ($stokBaru - $stokLama)) {
+                return redirect()->back()->with('error', 'Stok tidak mencukupi untuk perubahan.');
+            }
+
+            // Update stok barang sesuai perubahan pada faktur
+            $barang->stok = $barang->stok - ($stokBaru - $stokLama);
+            $barang->save();
+
+            // Panggil updateFaktur
             $this->fakturService->updateFaktur($id, $request->all());
+
             return redirect()->route('faktur.index')->with('success', 'Faktur berhasil diupdate.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengupdate faktur: ' . $e->getMessage());

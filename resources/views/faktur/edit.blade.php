@@ -1,38 +1,48 @@
-@extends('layouts.app')
-
-@section('content')
-    <div class="container">
-        <h1>Edit Faktur</h1>
-        <form action="{{ route('faktur.update', $faktur->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="form-group">
-                <label>Nomor Faktur</label>
-                <input type="text" name="nomor_faktur" class="form-control" value="{{ $faktur->nomor_faktur }}" required>
+<!-- Modal untuk Edit Faktur -->
+<div class="modal fade" id="modal_edit_faktur" tabindex="-1" role="dialog" aria-labelledby="modalEditFakturLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditFakturLabel">Edit Faktur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="form-group">
-                <label>Kode Faktur</label>
-                <input type="text" name="kode_faktur" class="form-control" value="{{ $faktur->kode_faktur }}" required>
-            </div>
-            <div class="form-group">
-                <label>Nama Barang</label>
-                <select name="nama_barang" class="form-control" required>
-                    @foreach ($barangs as $barang)
-                        <option value="{{ $barang->id }}" {{ $faktur->nama_barang == $barang->id ? 'selected' : '' }}>
-                            {{ $barang->nama_barang }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Jumlah</label>
-                <input type="number" name="banyak" class="form-control" value="{{ $faktur->banyak }}" required>
-            </div>
-            <div class="form-group">
-                <label>Harga Satuan</label>
-                <input type="number" name="harga_satuan" class="form-control" value="{{ $faktur->harga_satuan }}" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Update Faktur</button>
-        </form>
+            <form id="form_edit_faktur" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nomor Faktur</label>
+                        <input type="text" name="nomor_faktur" id="edit_nomor_faktur" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kode Faktur</label>
+                        <input type="text" name="kode_faktur" id="edit_kode_faktur" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Barang</label>
+                        <select name="nama_barang" id="edit_nama_barang" class="form-control" required>
+                            @foreach ($faktur as $barang)
+                                <option value="{{ $barang->id }}">{{ $barang->nama_barang }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah</label>
+                        <input type="number" name="banyak" id="edit_banyak" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Harga Satuan</label>
+                        <input type="number" name="harga_satuan" id="edit_harga_satuan" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
     </div>
-@endsection
+</div>

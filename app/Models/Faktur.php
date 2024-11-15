@@ -11,6 +11,6 @@ class Faktur extends Model
 
     public function barang()
     {
-        return $this->belongsTo(Barang::class, 'nama_barang');
+        return $this->belongsTo(Barang::class, 'nama_barang', 'id');
     }
 }
