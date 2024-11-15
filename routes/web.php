@@ -1,13 +1,10 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
-use App\Models\Supplier;
+
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\JenisController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangKeluarController;
-use App\Http\Controllers\SatuanController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BarangMasukController;
@@ -18,8 +15,8 @@ use App\Http\Controllers\LaporanBarangMasukController;
 use App\Http\Controllers\LaporanStokController;
 use App\Http\Controllers\ManajemenUserController;
 use App\Http\Controllers\UbahPasswordController;
-use App\Models\BarangKeluar;
-use App\Models\BarangMasuk;
+use App\Http\Controllers\FakturController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -65,12 +62,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/barang/get-data', [BarangController::class, 'getDataBarang']);
     Route::resource('/barang', BarangController::class);
+    // Route::get('/barang/edit', [BarangController::class, 'edit'])->name('barang.edit');
+    Route::post('/barang/update', [BarangController::class, 'update'])->name('barang.update');
+    Route::get('/barang/edit/{id}', [BarangController::class, 'edit'])->name('barang.edit');
 
-    Route::get('/jenis-barang/get-data', [JenisController::class, 'getDataJenisBarang']);
-    Route::resource('/jenis-barang', JenisController::class);
 
-    Route::get('/supplier/get-data', [SupplierController::class, 'getDataSupplier']);
-    Route::resource('/supplier', SupplierController::class);
 
     Route::get('/customer/get-data', [CustomerController::class, 'getDataCustomer']);
     Route::resource('/customer', CustomerController::class);
@@ -82,6 +78,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/barang-keluar/', [BarangKeluarController::class, 'getAutoCompleteData']);
     Route::get('/barang-keluar/get-data', [BarangKeluarController::class, 'getDataBarangKeluar']);
     Route::resource('/barang-keluar', BarangKeluarController::class);
+
+
+    Route::resource('faktur', FakturController::class);
 });
 
 require __DIR__ . '/auth.php';

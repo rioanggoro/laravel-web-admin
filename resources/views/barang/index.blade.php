@@ -227,25 +227,42 @@
 
     <!-- Edit Data Barang -->
     <script>
-        // Menampilkan Form Modal Edit
         $('body').on('click', '#button_edit_barang', function() {
             let barang_id = $(this).data('id');
 
             $.ajax({
-                url: `/barang/${barang_id}/edit`,
+                url: `/barang/edit`, // Route sesuai dengan Controller method edit
                 type: "GET",
-                cache: false,
+                data: {
+                    id: barang_id
+                },
                 success: function(response) {
-                    $('#barang_id').val(response.data.id);
-                    $('#edit_nama_barang').val(response.data.nama_barang);
-                    $('#edit_stok').val(response.data.stok);
-                    $('#edit_ukuran').val(response.data
-                        .ukuran); // Menggunakan 'ukuran' sesuai dengan tabel SQL
-
-                    $('#modal_edit_barang').modal('show');
+                    if (response.success) {
+                        $('#barang_id').val(response.data.id);
+                        $('#edit_nama_barang').val(response.data.nama_barang);
+                        $('#edit_stok').val(response.data.stok);
+                        $('#edit_ukuran').val(response.data.ukuran);
+                        $('#modal_edit_barang').modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText); // Debugging error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Gagal mengambil data barang.',
+                    });
                 }
             });
         });
+
+
 
         // Proses Update Data
         $('#update').click(function(e) {
@@ -254,64 +271,76 @@
             let barang_id = $('#barang_id').val();
             let nama_barang = $('#edit_nama_barang').val();
             let stok = $('#edit_stok').val();
-            let ukuran = $('#edit_ukuran').val(); // Menggunakan 'ukuran' sesuai dengan tabel SQL
+            let ukuran = $('#edit_ukuran').val();
             let token = $("meta[name='csrf-token']").attr("content");
 
             // Buat objek FormData
             let formData = new FormData();
+            formData.append('id', barang_id);
             formData.append('nama_barang', nama_barang);
             formData.append('stok', stok);
-            formData.append('ukuran', ukuran); // Menggunakan 'ukuran' sesuai dengan tabel SQL
+            formData.append('ukuran', ukuran);
             formData.append('_token', token);
-            formData.append('_method', 'PUT');
 
             $.ajax({
-                url: `/barang/${barang_id}`,
+                url: `/barang/update`, // Pastikan URL sesuai route update
                 type: "POST",
-                cache: false,
                 data: formData,
                 contentType: false,
                 processData: false,
-
                 success: function(response) {
-                    Swal.fire({
-                        type: 'success',
-                        icon: 'success',
-                        title: `${response.message}`,
-                        showConfirmButton: true,
-                        timer: 3000
-                    });
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
 
-                    let row = $(`#index_${response.data.id}`);
-                    let rowData = row.find('td');
+                        let row = $(`#index_${response.data.id}`);
+                        let rowData = row.find('td');
 
-                    // Update tampilan data pada tabel
-                    rowData.eq(2).text(response.data.nama_barang);
-                    rowData.eq(3).text(response.data.stok);
-                    rowData.eq(4).text(response.data
-                        .ukuran); // Menggunakan 'ukuran' untuk menampilkan ukuran barang
+                        // Update data di tabel
+                        rowData.eq(1).text(response.data.nama_barang);
+                        rowData.eq(2).text(response.data.stok);
+                        rowData.eq(3).text(response.data.ukuran);
 
-                    $('#modal_edit_barang').modal('hide');
+                        $('#modal_edit_barang').modal('hide');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                        });
+                    }
                 },
-
                 error: function(error) {
-                    if (error.responseJSON && error.responseJSON.nama_barang) {
-                        $('#alert-nama_barang').removeClass('d-none').addClass('d-block').html(error
-                            .responseJSON.nama_barang[0]);
-                    }
-                    if (error.responseJSON && error.responseJSON.stok) {
-                        $('#alert-stok').removeClass('d-none').addClass('d-block').html(error
-                            .responseJSON.stok[0]);
-                    }
-                    if (error.responseJSON && error.responseJSON
-                        .ukuran) { // Menggunakan 'ukuran' sesuai dengan tabel SQL
-                        $('#alert-ukuran').removeClass('d-none').addClass('d-block').html(error
-                            .responseJSON.ukuran[0]);
+                    if (error.responseJSON) {
+                        if (error.responseJSON.nama_barang) {
+                            $('#alert-edit_nama_barang').removeClass('d-none').html(error.responseJSON
+                                .nama_barang[0]);
+                        }
+                        if (error.responseJSON.stok) {
+                            $('#alert-edit_stok').removeClass('d-none').html(error.responseJSON.stok[
+                                0]);
+                        }
+                        if (error.responseJSON.ukuran) {
+                            $('#alert-edit_ukuran').removeClass('d-none').html(error.responseJSON
+                                .ukuran[0]);
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Terjadi kesalahan saat mengupdate data.',
+                        });
                     }
                 }
             });
         });
     </script>
+
 
 
 

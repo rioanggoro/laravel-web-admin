@@ -29,17 +29,23 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Ukuran</label>
-                                <input type="text" class="form-control" name="ukuran" id="ukuran" required>
+                                <!-- Mengubah input text menjadi dropdown select -->
+                                <select class="form-control" name="ukuran" id="ukuran" required>
+                                    <option value="" disabled selected>Pilih Ukuran</option>
+                                    <option value="1lt">1lt</option>
+                                    <option value="5lt">5lt</option>
+                                    <option value="15lt">15lt</option>
+                                    <option value="20lt">20lt</option>
+                                </select>
                                 <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-ukuran"></div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer bg-whitesmoke br">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
-                    <!-- Ubah type ke button untuk AJAX -->
-                    <button type="button" class="btn btn-primary" id="store">Tambah</button>
-                </div>
+                    <div class="modal-footer bg-whitesmoke br">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Keluar</button>
+                        <!-- Ubah type ke button untuk AJAX -->
+                        <button type="button" class="btn btn-primary" id="store">Tambah</button>
+                    </div>
             </form>
         </div>
     </div>

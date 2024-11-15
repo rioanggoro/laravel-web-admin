@@ -20,7 +20,6 @@ class BarangKeluarController extends Controller
         return view('barang-keluar.index', [
             'barangs'           => Barang::all(),
             'barangKeluar'      => BarangKeluar::all(),
-            'customers'         => Customer::all()
         ]);
     }
 
@@ -29,7 +28,6 @@ class BarangKeluarController extends Controller
         return response()->json([
             'success'   => true,
             'data'      => BarangKeluar::all(),
-            'customer'  => Customer::all()
         ]);
     }
 
@@ -58,20 +56,19 @@ class BarangKeluarController extends Controller
                 function ($attribute, $value, $fail) use ($request) {
                     $nama_barang = $request->nama_barang;
                     $barang = Barang::where('nama_barang', $nama_barang)->first();
-        
+
                     if ($value > $barang->stok) {
                         $fail("Stok Tidak Cukup !");
                     }
                 },
             ],
-        ],[
+        ], [
             'tanggal_keluar.required'    => 'Pilih Barang Terlebih Dahulu !',
             'nama_barang.required'       => 'Form Nama Barang Wajib Di Isi !',
             'jumlah_keluar.required'     => 'Form Jumlah Stok Masuk Wajib Di Isi !',
-            'customer_id.required'       => 'Pilih Customer !'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
@@ -80,10 +77,9 @@ class BarangKeluarController extends Controller
             'tanggal_keluar'    => $request->tanggal_keluar,
             'nama_barang'       => $request->nama_barang,
             'jumlah_keluar'     => $request->jumlah_keluar,
-            'customer_id'       => $request->customer_id,
             'kode_transaksi'    => $request->kode_transaksi,
             'user_id'           => auth()->user()->id
-        ]); 
+        ]);
 
         if ($barangKeluar) {
             $barang = Barang::where('nama_barang', $request->nama_barang)->first();
@@ -137,7 +133,7 @@ class BarangKeluarController extends Controller
         $barangKeluar->delete();
 
         $barang = Barang::where('nama_barang', $barangKeluar->nama_barang)->first();
-        if($barang){
+        if ($barang) {
             $barang->stok += $jumlahKeluar;
             $barang->save();
         }
@@ -155,7 +151,7 @@ class BarangKeluarController extends Controller
     {
         $barang = Barang::where('nama_barang', $request->nama_barang)->first();
 
-        if($barang){
+        if ($barang) {
             return response()->json([
                 'nama_barang'   => $barang->nama_barang,
                 'stok'          => $barang->stok,
@@ -184,7 +180,7 @@ class BarangKeluarController extends Controller
     public function getSatuan()
     {
         $satuans = Satuan::all();
-        
+
         return response()->json($satuans);
     }
 
@@ -197,7 +193,4 @@ class BarangKeluarController extends Controller
 
         return response()->json([]);
     }
-
-
-
 }

@@ -131,7 +131,7 @@
                                 <li><a class="nav-link {{ Request::is('barang') ? 'active' : '' }}" href="/barang"><i
                                             class="fa fa-solid fa-circle fa-xs"></i> Tambah Barang</a></li>
                                 <li><a class="nav-link {{ Request::is('jenis-barang') ? 'active' : '' }}"
-                                        href="/jenis-barang"><i class="fa fa-solid fa-circle fa-xs"></i>Buat Faktur</a>
+                                        href="/faktur"><i class="fa fa-solid fa-circle fa-xs"></i>Buat Faktur</a>
                                 </li>
                             </ul>
                         </li>

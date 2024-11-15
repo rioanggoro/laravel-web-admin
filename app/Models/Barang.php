@@ -3,30 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
 
 class Barang extends Model
 {
-    use HasFactory;
-    use LogsActivity;
-
-    // Kolom yang ada di tabel barangs
+    protected $table = 'barangs';
     protected $fillable = ['nama_barang', 'stok', 'ukuran'];
-    protected $guarded = ['id'];
-    protected $ignoreChangedAttributes = ['updated_at'];
 
-    public function getActivitylogAttributes(): array
+    // Relasi ke Faktur
+    public function fakturs()
     {
-        return array_diff($this->fillable, $this->ignoreChangedAttributes);
+        return $this->hasMany(Faktur::class, 'nama_barang');
     }
 
-    // Activity Log
-    public function getActivitylogOptions(): LogOptions
+    // Relasi ke BarangMasuk
+    public function barangMasuks()
     {
-        return LogOptions::defaults()
-            ->logUnguarded()
-            ->logOnlyDirty();
+        return $this->hasMany(BarangMasuk::class, 'nama_barang');
+    }
+
+    // Relasi ke BarangKeluar
+    public function barangKeluars()
+    {
+        return $this->hasMany(BarangKeluar::class, 'nama_barang');
     }
 }
