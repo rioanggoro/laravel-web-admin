@@ -21,7 +21,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
     ];
 
     /**
@@ -42,11 +41,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-
-    // 1 User hanya memiliki 1 role
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
 }

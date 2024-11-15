@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    use HasFactory;
-    protected $guarded = ['id'];
+    // use HasFactory;
+    // protected $guarded = ['id'];
 
-    // 1 Roles bisa dimiliki banyak user
-    public function users()
-    {
-        return $this->hasMany(User::class, 'user_id');
-    }
+    // // 1 Roles bisa dimiliki banyak user
+    // public function users()
+    // {
+    //     return $this->hasMany(User::class, 'user_id');
+    // }
 }
