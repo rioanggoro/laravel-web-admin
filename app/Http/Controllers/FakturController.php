@@ -11,6 +11,8 @@ class FakturController extends Controller
 {
     protected $fakturService;
 
+    /*************  ✨ Codeium Command ⭐  *************/
+    /******  36db921c-3b4f-4855-8d9b-dd78bb7ff0a2  *******/
     public function __construct(FakturService $fakturService)
     {
         $this->fakturService = $fakturService;
@@ -20,8 +22,10 @@ class FakturController extends Controller
     public function index()
     {
         $faktur = Faktur::all();
-        return view('faktur.index', compact('faktur'));
+        $barangs = Barang::all(); // Tambahkan ini untuk mengirim data barang
+        return view('faktur.index', compact('faktur', 'barangs'));
     }
+
 
     // Menampilkan form pembuatan faktur
     public function create()
@@ -34,7 +38,7 @@ class FakturController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nomor_faktur' => 'required|string|max:10',
+            'nomor_faktur' => 'required|integer',
             'kode_faktur' => 'required|string|max:10',
             'nama_barang' => 'required|exists:barangs,id',
             'banyak' => 'required|integer|min:1',
@@ -42,26 +46,33 @@ class FakturController extends Controller
         ]);
 
         try {
-            // Temukan barang yang dipilih
+            // Kurangi stok barang dan buat faktur baru
             $barang = Barang::findOrFail($request->nama_barang);
 
-            // Cek ketersediaan stok
             if ($barang->stok < $request->banyak) {
                 return redirect()->back()->with('error', 'Stok tidak mencukupi.');
             }
 
-            // Kurangi stok barang
             $barang->stok -= $request->banyak;
             $barang->save();
 
-            // Panggil `createFaktur` dari service
-            $this->fakturService->createFaktur($request->all());
+            Faktur::create([
+                'nomor_faktur' => $request->nomor_faktur,
+                'kode_faktur' => $request->kode_faktur,
+                'nama_barang' => $request->nama_barang,
+                'banyak' => $request->banyak,
+                'harga_satuan' => $request->harga_satuan,
+                'jumlah' => $request->banyak * $request->harga_satuan,
+            ]);
 
             return redirect()->route('faktur.index')->with('success', 'Faktur berhasil dibuat dan stok berkurang.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal membuat faktur: ' . $e->getMessage());
         }
     }
+
+
+
 
     // Menampilkan form edit faktur
     public function edit($id)

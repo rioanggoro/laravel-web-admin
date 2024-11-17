@@ -1,4 +1,4 @@
-<!-- Modal untuk Edit Faktur -->
+<!-- Modal Edit Faktur -->
 <div class="modal fade" id="modal_edit_faktur" tabindex="-1" role="dialog" aria-labelledby="modalEditFakturLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -9,38 +9,44 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_edit_faktur" method="POST">
+            <form id="form_edit_faktur">
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
+                    <input type="hidden" id="edit_faktur_id">
                     <div class="form-group">
                         <label>Nomor Faktur</label>
                         <input type="text" name="nomor_faktur" id="edit_nomor_faktur" class="form-control" required>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-nomor_faktur"></div>
                     </div>
                     <div class="form-group">
                         <label>Kode Faktur</label>
                         <input type="text" name="kode_faktur" id="edit_kode_faktur" class="form-control" required>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-kode_faktur"></div>
                     </div>
                     <div class="form-group">
                         <label>Nama Barang</label>
                         <select name="nama_barang" id="edit_nama_barang" class="form-control" required>
-                            @foreach ($faktur as $barang)
+                            @foreach ($barangs as $barang)
                                 <option value="{{ $barang->id }}">{{ $barang->nama_barang }}</option>
                             @endforeach
                         </select>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-nama_barang"></div>
                     </div>
                     <div class="form-group">
                         <label>Jumlah</label>
                         <input type="number" name="banyak" id="edit_banyak" class="form-control" required>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-banyak"></div>
                     </div>
                     <div class="form-group">
                         <label>Harga Satuan</label>
                         <input type="number" name="harga_satuan" id="edit_harga_satuan" class="form-control" required>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-harga_satuan"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-primary" id="update">Update Faktur</button>
                 </div>
             </form>
         </div>

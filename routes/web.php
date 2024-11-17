@@ -85,6 +85,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/faktur/{id}/edit', [FakturController::class, 'edit'])->name('faktur.edit');
 
     Route::put('/faktur/{id}', [FakturController::class, 'update'])->name('faktur.update');
+
+    // Route untuk menyimpan faktur
+    Route::post('/faktur', [FakturController::class, 'store'])->name('faktur.store');
 });
 
 require __DIR__ . '/auth.php';

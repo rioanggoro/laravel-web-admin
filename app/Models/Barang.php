@@ -12,8 +12,9 @@ class Barang extends Model
     // Relasi ke Faktur
     public function fakturs()
     {
-        return $this->hasMany(Faktur::class, 'nama_barang');
+        return $this->hasMany(Faktur::class, 'nama_barang', 'id');
     }
+
 
     // Relasi ke BarangMasuk
     public function barangMasuks()
