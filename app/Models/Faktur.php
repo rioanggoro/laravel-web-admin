@@ -9,19 +9,7 @@ class Faktur extends Model
 {
     use HasFactory;
     protected $table = 'faktur';
-
-    protected $fillable = [
-        'nomor_faktur', // int
-        'kode_faktur', // varchar(10)
-        'created_at', // date
-        'nama', // varchar(255)
-        'alamat', // text
-        'banyak', // int
-        'nama_barang', // bigint
-        'ukuran', // int
-        'harga_satuan', // decimal(10,0)
-        'jumlah', // decimal(10,0)
-    ];
+    protected $guarded = [];
 
     // Jika ada relasi dengan model Barang
     public function barang()
