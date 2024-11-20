@@ -68,9 +68,12 @@
                 </div>
             </div>
             <!-- Tombol Simpan -->
-            <div class="mt-6">
+            <form id="form_tambah_faktur" method="POST" action="{{ route('faktur.store') }}">
+                @csrf
+                <!-- Isi form -->
                 <button type="submit" class="btn btn-primary">Simpan Faktur</button>
-            </div>
+            </form>
+
         </form>
     </div>
 

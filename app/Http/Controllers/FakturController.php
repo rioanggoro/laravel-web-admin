@@ -83,7 +83,7 @@ class FakturController extends Controller
      *
      * @throws \Exception Jika terjadi kesalahan dalam pembuatan faktur
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $request->validate([
             'nomor_faktur' => 'required|integer',
@@ -100,15 +100,12 @@ class FakturController extends Controller
             $barang = Barang::findOrFail($request->nama_barang);
 
             if ($barang->stok < $request->banyak) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Stok barang tidak mencukupi'
-                ], 400);
+                return redirect()->back()->with('error', 'Stok barang tidak mencukupi');
             }
 
             $jumlah = $request->banyak * $request->harga_satuan;
 
-            $faktur = Faktur::create([
+            Faktur::create([
                 'nomor_faktur' => $request->nomor_faktur,
                 'kode_faktur' => $request->kode_faktur,
                 'nama' => $request->nama,
@@ -117,24 +114,18 @@ class FakturController extends Controller
                 'banyak' => $request->banyak,
                 'ukuran' => $request->ukuran,
                 'harga_satuan' => $request->harga_satuan,
-                'jumlah' => $jumlah
+                'jumlah' => $jumlah,
             ]);
 
             $barang->stok -= $request->banyak;
             $barang->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil ditambahkan',
-                'data' => $faktur
-            ]);
+            return redirect()->route('faktur.index')->with('success', 'Faktur berhasil disimpan');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal membuat faktur: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Menampilkan detail faktur beserta data barang terkait.
