@@ -51,7 +51,7 @@
             });
 
             /**
-             * Formats a date string into a localized format
+             * Formats a date string into a localized format based on local time
              *
              * @param {string} dateString - ISO date string to format
              * @returns {string} Formatted date string
@@ -65,16 +65,16 @@
                     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
                 ];
 
-                const date = new Date(dateString);
-                const dayName = days[date.getUTCDay()];
-                const day = date.getUTCDate();
-                const monthName = months[date.getUTCMonth()];
-                const year = date.getUTCFullYear();
-                const hours = String(date.getUTCHours()).padStart(2, "0");
-                const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-                const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+                const date = new Date(dateString); // Date object based on the string
+                const dayName = days[date.getDay()]; // getDay() for local day
+                const day = date.getDate(); // getDate() for local day of the month
+                const monthName = months[date.getMonth()]; // getMonth() for local month
+                const year = date.getFullYear(); // getFullYear() for local year
+                const hours = String(date.getHours()).padStart(2, "0"); // getHours() for local hour
+                const minutes = String(date.getMinutes()).padStart(2, "0"); // getMinutes() for local minute
+                const seconds = String(date.getSeconds()).padStart(2, "0"); // getSeconds() for local second
 
-                return `${dayName}, ${day} ${monthName} ${year} ${hours}.${minutes}.${seconds}`;
+                return `${dayName}, ${day} ${monthName} ${year} ${hours}:${minutes}:${seconds}`;
             };
 
             /**
