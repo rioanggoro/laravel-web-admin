@@ -4,13 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin</title>
 
     <!-- General CSS Files -->
+    <link rel="stylesheet" href="assets/modules/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/modules/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+
+    <!-- CSS Libraries -->
+
+    <!-- Template CSS -->
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/components.css">
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
@@ -116,40 +124,20 @@
                             </a>
                         </li>
 
-                        <li class="menu-header">DATA MASTER</li>
-                        <li class="dropdown">
-                            <a href="#"
-                                class="nav-link has-dropdown {{ Request::is('barang') || Request::is('jenis-barang') || Request::is('satuan-barang') ? 'active' : '' }}"
-                                data-toggle="dropdown"><i class="fas fa-thin fa-cubes"></i><span>Data Barang</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link {{ Request::is('barang') ? 'active' : '' }}" href="/barang"><i
-                                            class="fa fa-solid fa-circle fa-xs"></i> Tambah Barang</a></li>
-                                <li><a class="nav-link {{ Request::is('jenis-barang') ? 'active' : '' }}"
-                                        href="/faktur"><i class="fa fa-solid fa-circle fa-xs"></i>Buat Faktur</a>
-                                </li>
-                            </ul>
+                        <li class="menu-header">DATA BARANG</li>
+                        <li>
+                            <a class="nav-link {{ Request::is('barang') ? 'active' : '' }}"
+                                href="{{ route('barang.index') }}">
+                                <i class="fa fa-circle fa-xs"></i> Tambah Barang
+                            </a>
                         </li>
 
-                        <li class="menu-header">TRANSAKSI</li>
-                        <li><a class="nav-link {{ Request::is('barang-masuk') ? 'active' : '' }}"
-                                href="barang-masuk"><i class="fa fa-solid fa-arrow-right"></i><span>Barang
-                                    Masuk</span></a></li>
-                        <li><a class="nav-link {{ Request::is('barang-keluar') ? 'active' : '' }}"
-                                href="barang-keluar"><i class="fa fa-sharp fa-solid fa-arrow-left"></i><span>Barang
-                                    Keluar</span></a></li>
 
-                        <li class="menu-header">LAPORAN</li>
-                        <li><a class="nav-link {{ Request::is('laporan-stok') ? 'active' : '' }}"
-                                href="laporan-stok"><i class="fa fa-sharp fa-reguler fa-file"></i><span>Stok</span></a>
-                        </li>
-                        <li><a class="nav-link {{ Request::is('laporan-barang-masuk') ? 'active' : '' }}"
-                                href="laporan-barang-masuk"><i class="fa fa-regular fa-file-import"></i><span>Barang
-                                    Masuk</span></a></li>
-                        <li><a class="nav-link {{ Request::is('laporan-barang-keluar') ? 'active' : '' }}"
-                                href="laporan-barang-keluar"><i
-                                    class="fa fa-sharp fa-regular fa-file-export"></i><span>Barang Keluar</span></a>
-                        </li>
 
+                        <li class="menu-header">FAKTUR </li>
+                        <li><a class="nav-link {{ Request::is('jenis-barang') ? 'active' : '' }}" href="/faktur"><i
+                                    class="fa fa-solid fa-circle fa-xs"></i>Buat Faktur</a>
+                        </li>
                     </ul>
 
                 </aside>
