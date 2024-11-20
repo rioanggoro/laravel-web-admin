@@ -34,8 +34,7 @@ class FakturController extends Controller
      */
     public function __construct(
         private readonly FakturService $fakturService
-    ) {
-    }
+    ) {}
 
     /**
      * Menampilkan daftar semua faktur.
@@ -129,7 +128,6 @@ class FakturController extends Controller
                 'message' => 'Data berhasil ditambahkan',
                 'data' => $faktur
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -167,7 +165,6 @@ class FakturController extends Controller
 
             // Jika bukan AJAX, tampilkan view
             return view('faktur.show', compact('faktur', 'total'));
-
         } catch (\Exception $e) {
             if (request()->ajax()) {
                 return response()->json([

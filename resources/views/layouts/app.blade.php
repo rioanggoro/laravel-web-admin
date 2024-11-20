@@ -4,19 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <title>Admin</title>
 
     <!-- General CSS Files -->
-    <link rel="stylesheet" href="assets/modules/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/modules/fontawesome/css/all.min.css">
-
-    <!-- CSS Libraries -->
-
-    <!-- Template CSS -->
-
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="{{ asset('assets/modules/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
@@ -137,8 +131,8 @@
                         </li>
 
                         <li class="menu-header">TRANSAKSI</li>
-                        <li><a class="nav-link {{ Request::is('barang-masuk') ? 'active' : '' }}" href="barang-masuk"><i
-                                    class="fa fa-solid fa-arrow-right"></i><span>Barang
+                        <li><a class="nav-link {{ Request::is('barang-masuk') ? 'active' : '' }}"
+                                href="barang-masuk"><i class="fa fa-solid fa-arrow-right"></i><span>Barang
                                     Masuk</span></a></li>
                         <li><a class="nav-link {{ Request::is('barang-keluar') ? 'active' : '' }}"
                                 href="barang-keluar"><i class="fa fa-sharp fa-solid fa-arrow-left"></i><span>Barang
