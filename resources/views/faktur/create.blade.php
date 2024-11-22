@@ -1,12 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="section-header">
-        <h1>Tambah Data Faktur</h1>
-    </div>
     <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-bold mb-6">Tambah Faktur</h1>
         <!-- Form Tambah Faktur -->
-        <form id="form_tambah_faktur" method="POST" action="{{ route('faktur.update') }}">
+        <form id="form_tambah_faktur" method="POST" action="{{ route('faktur.store') }}">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Nomor Faktur -->
@@ -69,16 +67,16 @@
                     <input type="number" name="jumlah" id="jumlah" class="form-control" readonly>
                 </div>
             </div>
+            <!-- Tombol Simpan -->
+            <form id="form_tambah_faktur" method="POST" action="{{ route('faktur.store') }}">
+                @csrf
+                <!-- Isi form -->
+                <button type="submit" class="btn btn-primary">Simpan Faktur</button>
+            </form>
 
-            <!-- Isi form -->
-            <button type="submit" class="btn btn-primary">Simpan Faktur</button>
         </form>
-
     </div>
-@endsection
 
-
-@section('script-js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const banyakInput = document.getElementById('banyak');
