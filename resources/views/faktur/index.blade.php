@@ -1,17 +1,16 @@
 @extends('layouts.app')
 
-@include('faktur.edit')
 
 @section('content')
-    <div class="mb-4 row">
-        <div class="col">
-            <h1>Data Faktur</h1>
-            <a href="{{ route('faktur.create') }}" class="btn btn-primary">
-                Tambah Faktur
-            </a>
-
+    <div class="section-header">
+        <h1>Data Faktur</h1>
+        <div class="ml-auto">
+            <a href="{{ route('faktur.create') }}" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i>
+                Tambah
+                Faktur</a>
         </div>
     </div>
+
 
     <div class="row">
         <div class="col">
@@ -37,6 +36,7 @@
             </div>
         </div>
     </div>
+    @include('faktur.edit')
 @endsection
 
 @push('scripts')
@@ -161,7 +161,7 @@
                 calculateTotal();
 
                 $.ajax({
-                    url: '/faktur',
+                    url: "{{ route('faktur.store') }}",
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -207,7 +207,9 @@
              */
             $('#update').click(function(e) {
                 e.preventDefault();
+
                 const formData = new FormData($('#form_edit_faktur')[0]);
+
 
                 $.ajax({
                     url: $('#form_edit_faktur').attr('action'),
@@ -216,27 +218,59 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
+                        // Track the successful response data
                         Swal.fire({
                             icon: 'success',
                             title: response.message || 'Data berhasil diupdate',
+                            text: JSON.stringify(
+                                response), // Optionally show the entire response data
                             showConfirmButton: true,
                             timer: 3000
                         });
+
+                        // Close modal and reload data
                         $('#modal_edit_faktur').modal('hide');
                         loadFaktur();
                     },
                     error: function(error) {
+                        // Track the error data
+                        let errorMessage = "An unknown error occurred.";
                         if (error.responseJSON?.errors) {
+                            // Show validation errors in Swal
                             Object.entries(error.responseJSON.errors).forEach(([key,
                                 value
                             ]) => {
                                 $(`#alert-edit-${key}`).removeClass('d-none').html(
                                     value[0]);
+
+                                // Using Swal to display the specific error
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: `Error with ${key}`,
+                                    text: value[0],
+                                    showConfirmButton: true,
+                                });
+                            });
+                        } else {
+                            // Show the generic error message in Swal
+                            if (error.responseJSON?.message) {
+                                errorMessage = error.responseJSON.message;
+                            } else {
+                                errorMessage = error.responseText || errorMessage;
+                            }
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Update Failed',
+                                text: errorMessage,
+                                showConfirmButton: true,
+                                timer: 5000
                             });
                         }
                     }
                 });
             });
+
 
             /**
              * Global function to handle invoice editing
@@ -247,15 +281,18 @@
                     url: `/faktur/${id}/edit`,
                     type: "GET",
                     success: function(response) {
+                        $('#edit_faktur_id').val(response.id);
+                        $('#edit_barang_id').val(response.barang_id);
                         $('#edit_nomor_faktur').val(response.nomor_faktur);
                         $('#edit_kode_faktur').val(response.kode_faktur);
                         $('#edit_nama').val(response.nama);
                         $('#edit_alamat').val(response.alamat);
-                        $('#edit_banyak').val(response.banyak);
-                        $('#edit_nama_barang').val(response.nama_barang);
+                        $('#edit_banyak').val(response.jumlah_barang);
+                        $('#edit_jumlah').val(response.jumlah_barang);
+                        $('#edit_nama_barang').val(response.barang_id).trigger('change');
                         $('#edit_ukuran').val(response.ukuran);
                         $('#edit_harga_satuan').val(response.harga_satuan);
-                        $('#form_edit_faktur').attr('action', `/faktur/${id}`);
+                        $('#form_edit_faktur').attr('action', `/faktur`);
                         $('#modal_edit_faktur').modal('show');
                     },
                     error: function() {

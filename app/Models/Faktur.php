@@ -11,6 +11,9 @@ class Faktur extends Model
     protected $table = 'faktur';
     protected $guarded = [];
 
+    public $timestamps = true;
+
+
     // Jika ada relasi dengan model Barang
     public function barang()
     {

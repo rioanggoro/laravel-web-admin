@@ -6,3 +6,12 @@
  */
 
 /*# sourceMappingURL=custom.css.map */
+
+.modal-backdrop {
+    display: none !important;
+    /* z-index: 1 !important; */
+}
+
+.search-element {
+    z-index: 1000 !important;
+}

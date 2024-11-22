@@ -85,44 +85,94 @@ class FakturController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nomor_faktur' => 'required|integer',
-            'kode_faktur' => 'required|string|max:10',
-            'nama' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'nama_barang' => 'required|exists:barangs,id',
-            'banyak' => 'required|integer|min:1',
-            'ukuran' => 'required|string|max:11',
-            'harga_satuan' => 'required|numeric|min:0',
-        ]);
 
-        try {
-            $barang = Barang::findOrFail($request->nama_barang);
-
-            if ($barang->stok < $request->banyak) {
-                return redirect()->back()->with('error', 'Stok barang tidak mencukupi');
-            }
-
-            $jumlah = $request->banyak * $request->harga_satuan;
-
-            Faktur::create([
-                'nomor_faktur' => $request->nomor_faktur,
-                'kode_faktur' => $request->kode_faktur,
-                'nama' => $request->nama,
-                'alamat' => $request->alamat,
-                'nama_barang' => $request->nama_barang,
-                'banyak' => $request->banyak,
-                'ukuran' => $request->ukuran,
-                'harga_satuan' => $request->harga_satuan,
-                'jumlah' => $jumlah,
+        if ($request->id) {
+            $id = $request->id;
+            $request->validate([
+                'nomor_faktur' => 'required|string|max:10',
+                'kode_faktur' => 'required|string|max:10',
+                'nama_barang' => 'required|exists:barangs,id',
+                'banyak' => 'required|integer|min:1',
+                'harga_satuan' => 'required|numeric|min:0',
             ]);
 
-            $barang->stok -= $request->banyak;
-            $barang->save();
+            try {
+                $faktur = Faktur::findOrFail($id);
+                $barang = Barang::findOrFail($request->nama_barang);
 
-            return redirect()->route('faktur.index')->with('success', 'Faktur berhasil disimpan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                $stokLama = $faktur->jumlah;
+                $stokBaru = $request->jumlah;
+
+
+                if ($stokLama !== $stokBaru) {
+                    if ($stokBaru > $stokLama && $barang->stok < ($stokBaru - $stokLama)) {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Stok barang tidak mencukupi. !',
+                        ], 400); // 400 is Bad Request
+                    }
+                }
+
+                // Update the stock of the barang
+                $barang->stok -= ($stokBaru - $stokLama);
+                $barang->save();
+
+                // Call your service to update the faktur
+                $this->fakturService->updateFaktur($id, $request->all());
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Faktur berhasil diperbarui.',
+                ], 200); // 200 is OK
+            } catch (\Exception $e) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal memperbarui faktur: ' . $e->getMessage(),
+                ], 500); // 500 is Internal Server Error
+            }
+        } else {
+
+            if (empty($request->id)) {
+                $request->validate([
+                    'nomor_faktur' => 'required|integer',
+                    'kode_faktur' => 'required|string|max:10',
+                    'nama' => 'required|string|max:255',
+                    'alamat' => 'required|string',
+                    'nama_barang' => 'required|exists:barangs,id',
+                    'banyak' => 'required|integer|min:1',
+                    'ukuran' => 'required|string|max:11',
+                    'harga_satuan' => 'required|numeric|min:0',
+                ]);
+
+                try {
+                    $barang = Barang::findOrFail($request->nama_barang);
+
+                    if ($barang->stok < $request->banyak) {
+                        return redirect()->back()->with('error', 'Stok barang tidak mencukupi');
+                    }
+
+                    $jumlah = $request->banyak * $request->harga_satuan;
+
+                    Faktur::create([
+                        'nomor_faktur' => $request->nomor_faktur,
+                        'kode_faktur' => $request->kode_faktur,
+                        'nama' => $request->nama,
+                        'alamat' => $request->alamat,
+                        'nama_barang' => $request->nama_barang,
+                        'banyak' => $request->banyak,
+                        'ukuran' => $request->ukuran,
+                        'harga_satuan' => $request->harga_satuan,
+                        'jumlah' => $jumlah,
+                    ]);
+
+                    $barang->stok -= $request->banyak;
+                    $barang->save();
+
+                    return redirect()->route('faktur.index')->with('success', 'Faktur berhasil disimpan');
+                } catch (\Exception $e) {
+                    return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                }
+            }
         }
     }
 
@@ -186,11 +236,15 @@ class FakturController extends Controller
         $faktur = Faktur::with('barang')->findOrFail($id);
 
         return response()->json([
+            'id' => $faktur->id,
             'nomor_faktur' => $faktur->nomor_faktur,
             'kode_faktur' => $faktur->kode_faktur,
             'barang_id' => $faktur->barang->id,
-            'jumlah_barang' => $faktur->jumlah_barang,
+            'jumlah_barang' => $faktur->jumlah,
             'harga_satuan' => $faktur->harga_satuan,
+            'nama' => $faktur->nama,
+            'alamat' => $faktur->alamat,
+            'ukuran' => $faktur->ukuran
         ]);
     }
 
@@ -206,39 +260,7 @@ class FakturController extends Controller
      *
      * @throws \Exception Jika terjadi kesalahan dalam pembaruan faktur
      */
-    public function update(Request $request, int $id): RedirectResponse
-    {
-        $request->validate([
-            'nomor_faktur' => 'required|string|max:10',
-            'kode_faktur' => 'required|string|max:10',
-            'nama_barang' => 'required|exists:barangs,id',
-            'banyak' => 'required|integer|min:1',
-            'harga_satuan' => 'required|numeric|min:0',
-        ]);
-
-        try {
-            $faktur = Faktur::findOrFail($id);
-            $barang = Barang::findOrFail($request->barang_id);
-
-            $stokLama = $faktur->jumlah_barang;
-            $stokBaru = $request->jumlah_barang;
-
-            if ($stokBaru > $stokLama && $barang->stok < ($stokBaru - $stokLama)) {
-                return redirect()->back()->with('error', 'Stok barang tidak mencukupi.');
-            }
-
-            $barang->stok -= ($stokBaru - $stokLama);
-            $barang->save();
-
-            $this->fakturService->updateFaktur($id, $request->all());
-
-            return redirect()->route('faktur.index')
-                ->with('success', 'Faktur berhasil diperbarui.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal memperbarui faktur: ' . $e->getMessage());
-        }
-    }
+    public function update(Request $request, int $id) {}
 
     /**
      * Menghapus faktur dari database.

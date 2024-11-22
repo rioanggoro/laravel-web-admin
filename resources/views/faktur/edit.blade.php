@@ -11,9 +11,13 @@
             </div>
             <form id="form_edit_faktur">
                 @csrf
-                @method('PUT')
+                @method('POST')
                 <div class="modal-body">
-                    <input type="hidden" id="edit_faktur_id">
+                    <input type="hidden" name="id" id="edit_faktur_id">
+                    <input type="hidden" name="nama" id="edit_nama">
+                    <input type="hidden" name="alamat" id="edit_alamat">
+                    <input type="hidden" name="ukuran" id="edit_ukuran">
+                    <input type="hidden" name="barang_id" id="edit_barang_id">
                     <div class="form-group">
                         <label>Nomor Faktur</label>
                         <input type="text" name="nomor_faktur" id="edit_nomor_faktur" class="form-control" required>
@@ -35,6 +39,7 @@
                     </div>
                     <div class="form-group">
                         <label>Jumlah</label>
+                        <input type="hidden" name="jumlah" id="edit_jumlah">
                         <input type="number" name="banyak" id="edit_banyak" class="form-control" required>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-banyak"></div>
                     </div>

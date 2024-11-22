@@ -1,8 +1,10 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="modal_tambah_barang">
-    <div class="modal-dialog modal-lg" role="document">
+<!-- Modal -->
+<div class="modal fade" id="modal_tambah_barang" tabindex="-1" role="dialog" aria-labelledby="modal_tambah_barang_label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Barang</h5>
+                <h5 class="modal-title" id="modal_tambah_barang_label">Tambah Barang</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -49,4 +51,5 @@
             </form>
         </div>
     </div>
+</div>
 </div>
