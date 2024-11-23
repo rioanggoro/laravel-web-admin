@@ -1,22 +1,20 @@
 @extends('layouts.app')
 
-
+@section('content-header')
+    <h1>Data Barang</h1>
+    <div class="ml-auto">
+        <a href="javascript:void(0)" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i> Tambah
+            Barang</a>
+    </div>
+@endsection
 
 @section('content')
-    <div class="section-header">
-        <h1>Data Barang</h1>
-        <div class="ml-auto">
-            <a href="javascript:void(0)" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i> Tambah
-                Barang</a>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="table_id" class="display">
+                        <table id="table_id" class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -34,15 +32,19 @@
             </div>
         </div>
     </div>
+@endsection
+
+@push('modal-includes')
     @include('barang.create')
     @include('barang.edit')
     @include('barang.show')
-@endsection
+@endpush
 
 
-@section('script-js')
+@push('scripts')
     <script>
         $(document).ready(function() {
+
             // Initialize DataTable
             const table = $('#table_id').DataTable({
                 paging: true
@@ -203,4 +205,4 @@
             }
         });
     </script>
-@endsection
+@endpush

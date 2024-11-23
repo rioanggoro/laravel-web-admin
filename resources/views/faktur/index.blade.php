@@ -1,21 +1,19 @@
 @extends('layouts.app')
 
+@section('content-header')
+    <h1>Data Faktur</h1>
+    <div class="ml-auto">
+        <a href="{{ route('faktur.create') }}" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i>
+            Tambah
+            Faktur</a>
+    </div>
+@endsection
 
 @section('content')
-    <div class="section-header">
-        <h1>Data Faktur</h1>
-        <div class="ml-auto">
-            <a href="{{ route('faktur.create') }}" class="btn btn-primary" id="button_tambah_barang"><i class="fa fa-plus"></i>
-                Tambah
-                Faktur</a>
-        </div>
-    </div>
-
-
     <div class="row">
         <div class="col">
             <div class="table-responsive">
-                <table id="table_faktur" class="table table-bordered">
+                <table id="table_faktur" class="table table-striped">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -36,8 +34,11 @@
             </div>
         </div>
     </div>
-    @include('faktur.edit')
 @endsection
+
+@push('modal-includes')
+    @include('faktur.edit')
+@endpush
 
 @push('scripts')
     <script>
@@ -208,24 +209,37 @@
             $('#update').click(function(e) {
                 e.preventDefault();
 
-                const formData = new FormData($('#form_edit_faktur')[0]);
-
+                const formData = {
+                    nomor_faktur: $('#edit_nomor_faktur').val(),
+                    kode_faktur: $('#edit_kode_faktur').val(),
+                    nama_barang: $('#edit_nama_barang').val(),
+                    banyak: $('#edit_banyak').val(),
+                    harga_satuan: $('#edit_harga_satuan').val(),
+                    nama: $('#edit_nama').val(),
+                    alamat: $('#edit_alamat').val(),
+                    ukuran: $('#edit_ukuran').val(),
+                    id: $('#edit_faktur_id').val(),
+                    barang_id: $('#edit_barang_id').val()
+                }
 
                 $.ajax({
-                    url: $('#form_edit_faktur').attr('action'),
+                    url: "{{ route('faktur.store') }}",
                     type: "POST",
-                    data: formData,
-                    contentType: false,
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
                     processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content'), // Include CSRF token for Laravel
+                    },
                     success: function(response) {
                         // Track the successful response data
                         Swal.fire({
                             icon: 'success',
-                            title: response.message || 'Data berhasil diupdate',
-                            text: JSON.stringify(
-                                response), // Optionally show the entire response data
-                            showConfirmButton: true,
-                            timer: 3000
+                            title: 'Berhasil',
+                            text: response.message[
+                                0], // Optionally show the entire response data
+                            showConfirmButton: true
                         });
 
                         // Close modal and reload data
@@ -323,7 +337,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             url: `/faktur/${id}`,
-                            type: "DELETE",
+                            method: "DELETE",
                             data: {
                                 "_token": token
                             },

@@ -49,17 +49,24 @@ class FakturService
 
             // Mengembalikan stok barang yang lama
             $oldBarang = Barang::findOrFail($faktur->nama_barang);
-            $oldBarang->stok += $faktur->banyak;
-            $oldBarang->save();
 
-            // Cek stok barang yang baru
-            if ($barang->stok < $data['banyak']) {
-                throw new \Exception("Stok barang tidak mencukupi.");
+            $stokLama = (int) $faktur->banyak;
+            $stokBaru = (int) $data['banyak'];
+
+            if ($stokLama !== $stokBaru) {
+                $oldBarang->stok += $faktur->banyak;
+                $oldBarang->save();
+
+                // Cek stok barang yang baru
+                if ($barang->stok < $data['banyak']) {
+                    throw new \Exception("Stok barang tidak mencukupi.");
+                }
+
+                // Kurangi stok barang baru
+                $barang->stok -= $data['banyak'];
+                $barang->save();
             }
 
-            // Kurangi stok barang baru
-            $barang->stok -= $data['banyak'];
-            $barang->save();
 
             // Update faktur
             $faktur->update([
@@ -72,7 +79,7 @@ class FakturService
             ]);
 
             DB::commit();
-            return $faktur;
+            return ['success' => true, 'Berhasil Mengupdate Faktur'];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -92,6 +99,8 @@ class FakturService
 
             $faktur->delete();
             DB::commit();
+
+            return ['success' => true, 'message' => 'Berhasil Menghapus Faktur'];
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;

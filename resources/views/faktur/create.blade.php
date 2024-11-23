@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
+@section('content-header')
+    <h1 class="text-2xl font-bold mb-6">Tambah Faktur</h1>
+@endsection
+
 @section('content')
-    <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-6">Tambah Faktur</h1>
+    <div class="container p-6">
         <!-- Form Tambah Faktur -->
         <form id="form_tambah_faktur" method="POST" action="{{ route('faktur.store') }}">
             @csrf

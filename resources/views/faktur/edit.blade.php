@@ -10,8 +10,6 @@
                 </button>
             </div>
             <form id="form_edit_faktur">
-                @csrf
-                @method('POST')
                 <div class="modal-body">
                     <input type="hidden" name="id" id="edit_faktur_id">
                     <input type="hidden" name="nama" id="edit_nama">

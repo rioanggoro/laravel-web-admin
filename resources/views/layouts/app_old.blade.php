@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>Admin</title>
 
     <!-- General CSS Files -->
@@ -16,20 +15,22 @@
 
     <!-- CSS Libraries -->
 
-    {{-- SweetAlert2 --}}
-    <link rel="stylesheet" href="{{ asset('assets/css/sweetalert2.min.css') }}">
-
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
 
-    {{-- SELECT 2 --}}
-    <link rel="stylesheet" href="{{ asset('assets/modules/select2/dist/css/select2.min.css') }}">
 
-    {{-- DATA TABLES --}}
-    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/datatables.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/modules/datatables/Select-1.2.4/css/select.bootstrap4.min.css') }}">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+    <!-- Datatable Jquery -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.4.1/css/dataTables.dateTime.min.css">
 
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
@@ -43,6 +44,8 @@
 
         gtag('config', 'UA-94034622-3');
     </script>
+
+
     <!-- /END GA -->
 </head>
 
@@ -63,12 +66,11 @@
                             data-width="250">
                         <button class="btn" type="submit"><i class="fas fa-search"></i></button>
                         <div class="search-backdrop"></div>
-                        <div class="search-result">
-
-                        </div>
                     </div>
                 </form>
                 <ul class="navbar-nav navbar-right">
+
+
                     <li class="dropdown"><a href="#" data-toggle="dropdown"
                             class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             <img alt="image" src="{{ asset('assets/img/avatar/avatar-1.png') }}"
@@ -82,19 +84,19 @@
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
-                            Swal.fire({
-                                title: 'Konfirmasi Keluar',
-                                text: 'Apakah Anda yakin ingin keluar?',
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ya, Keluar!'
-                              }).then((result) => {
-                                if (result.isConfirmed) {
-                                  document.getElementById('logout-form').submit();
-                                }
-                              });">
+                                Swal.fire({
+                                    title: 'Konfirmasi Keluar',
+                                    text: 'Apakah Anda yakin ingin keluar?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ya, Keluar!'
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      document.getElementById('logout-form').submit();
+                                    }
+                                  });">
                                 <i class="fas fa-sign-out-alt"></i> {{ __('Keluar') }}
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -107,14 +109,15 @@
             </nav>
             <div class="main-sidebar sidebar-style-2">
                 <aside id="sidebar-wrapper">
+
                     <div class="sidebar-brand">
                         <a href="/">Admin</a>
                     </div>
-                    <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="/">Ad</a>
-                    </div>
+
                     <ul class="sidebar-menu">
-                        <li>
+
+
+                        <li class="sidebar-item">
                             <a class="sidebar-link nav-link {{ Request::is('/') || Request::is('dashboard') ? 'active' : '' }}"
                                 href="/">
                                 <i class="fas fa-fire"></i> <span class="align-middle">Dashboard</span>
@@ -144,10 +147,6 @@
             <div class="main-content">
                 <section class="section">
 
-                    <div class="section-header">
-                        @yield('content-header')
-                    </div>
-
                     <div class="section-body">
                         @yield('content')
                     </div>
@@ -155,7 +154,7 @@
             </div>
             <footer class="main-footer">
                 <div class="footer-left">
-                    Copyright &copy; 2024</a>
+                    Copyright &copy; 2023
                 </div>
                 <div class="footer-right">
 
@@ -164,7 +163,7 @@
         </div>
     </div>
 
-    @stack('modal-includes')
+
 
     <!-- General JS Scripts -->
     <script src="{{ asset('assets/modules/jquery.min.js') }}"></script>
@@ -175,15 +174,14 @@
     <script src="{{ asset('assets/modules/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/stisla.js') }}"></script>
 
-    <!-- JS Libraies -->
-    <script src="{{ asset('assets/modules/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('assets/modules/prism/prism.js') }}"></script>
+    <!-- JS Libraries -->
+
+    <!-- Select2 Jquery -->
+    @include('sweetalert::alert')
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+        integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
 
     <!-- Page Specific JS File -->
 
@@ -191,17 +189,49 @@
     <script src="{{ asset('assets/js/scripts.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
 
+    <!-- Datatables Jquery -->
+    <script type="text/javascript" src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <!-- Sweet Alert -->
+    {{-- @include('sweetalert::alert') --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Day Js Format -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
+
+    @yield('script-js')
+    @stack('scripts')
+
+
     <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "{{ session('success') }}",
+                    showConfirmButton: true,
+                    timer: 3000
+                });
+            @elseif (session('failed'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "{{ session('failed') }}",
+                    showConfirmButton: true,
+                    timer: 3000
+                });
+            @endif
+        });
+
         $(document).ready(function() {
             var currentPath = window.location.pathname;
 
             $('.nav-link a[href="' + currentPath + '"]').addClass('active');
-
-
         });
     </script>
 
-    @stack('scripts')
 
 </body>
 
